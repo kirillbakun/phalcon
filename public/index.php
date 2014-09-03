@@ -1,27 +1,31 @@
 <?php
-    try {
-        //Register an autoloader
-        $loader = new \Phalcon\Loader();
-        $loader->registerDirs(array(
-            '../app/controllers/',
-            '../app/models/'
-        ))->register();
 
-        //Create a DI
-        $di = new Phalcon\DI\FactoryDefault();
+error_reporting(E_ALL);
 
-        //Setting up the view component
-        $di->set('view', function(){
-            $view = new \Phalcon\Mvc\View();
-            $view->setViewsDir('../app/views/');
-            return $view;
-        });
+try {
 
-        //Handle the request
-        $application = new \Phalcon\Mvc\Application($di);
+    /**
+     * Read the configuration
+     */
+    $config = include __DIR__ . "/../app/config/config.php";
 
-        echo $application->handle()->getContent();
+    /**
+     * Read auto-loader
+     */
+    include __DIR__ . "/../app/config/loader.php";
 
-    } catch(\Phalcon\Exception $e) {
-        echo "PhalconException: ", $e->getMessage();
-    }
+    /**
+     * Read services
+     */
+    include __DIR__ . "/../app/config/services.php";
+
+    /**
+     * Handle the request
+     */
+    $application = new \Phalcon\Mvc\Application($di);
+
+    echo $application->handle()->getContent();
+
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
